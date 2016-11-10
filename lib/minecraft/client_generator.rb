@@ -76,11 +76,7 @@ module Minecraft
     end
 
     def template
-      File.read("files/minecraft-client.sh.erb")
+      File.read(Minecraft.path("files/minecraft-client.sh.erb"))
     end
-
   end
 end
-
-gen = Minecraft::ClientGenerator.new(username: "Papa")
-puts gen.generate_script
