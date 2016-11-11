@@ -28,7 +28,7 @@ exec $JAVA_HOME/bin/java \
   -XX:+UseConcMarkSweepGC \
   -XX:+CMSIncrementalMode \
   -XX:-UseAdaptiveSizePolicy \
-  -Djava.library.path="$APP_SUPPORT/versions/$VERSION/$VERSION-natives" \
+  -Djava.library.path="natives" \
   -cp "$CLASSPATH" \
   net.minecraft.client.main.Main \
   --username "$USERNAME" \

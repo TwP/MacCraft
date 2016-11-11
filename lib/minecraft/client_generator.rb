@@ -18,27 +18,60 @@ module Minecraft
       @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
     end
 
-    def generate_script
+    def generate
       cmd = command
       abort "Minecraft does not appear to be running" if cmd.nil? || cmd.empty?
 
+      prepare!
       parse(cmd: cmd)
-      pin_native_libs!
 
-      renderer = ERB.new(template, nil, "<>")
-      renderer.result(binding)
+      natives    = copy_native_libs
+      scriptname = generate_script
+
+      package_app(scriptname: scriptname, natives: natives)
     end
 
-    def pin_native_libs!
+    def package_app(scriptname:, natives:)
+      pwd = Dir.pwd
+      Dir.chdir(Minecraft.tmp)
+
+      args = %W[
+        /usr/local/bin/platypus -R
+        -a '#{username} Minecraft'
+        -o 'None'
+        -i '#{Minecraft.path("icons/minecraft-client.icns")}'
+        -V '#{version}'
+        -u 'Tim Pease'
+        -I 'com.pea53.Minecraft.client'
+        #{scriptname}
+      ]
+
+      system args.join(" ")  # we want to see platypus output
+      FileUtils.cp_r(natives, "#{username} Minecraft.app/Contents/Resources/")
+    ensure
+      Dir.chdir(pwd)
+    end
+
+    def generate_script
+      scriptname = Minecraft.tmp("minecraft-client.sh")
+      File.open(scriptname, "w") do |fd|
+        renderer = ERB.new(template, nil, "<>")
+        fd.write(renderer.result(binding))
+      end
+      scriptname
+    end
+
+    def copy_native_libs
       src  = java_library_path
-      dest = java_library_path.sub(%r/#{Regexp.escape(version)}-natives-\d+$/, "#{version}-natives")
+      dest = Minecraft.tmp("natives")
 
       FileUtils.rm_r(dest) if File.exists?(dest)
       FileUtils.cp_r(src, dest)
+      dest
     end
 
     def command
-      cmd = `ps -xo command | grep -i '#{JAVA_MAIN}' | grep -v grep`
+      cmd = %x(ps -xo command | grep -i '#{JAVA_MAIN}' | grep -v grep)
       cmd.strip!
       cmd
     end
@@ -77,6 +110,12 @@ module Minecraft
 
     def template
       File.read(Minecraft.path("files/minecraft-client.sh.erb"))
+    end
+
+    def prepare!
+      tmp = Minecraft.tmp
+      FileUtils.rm_r(tmp) if File.exists?(tmp)
+      FileUtils.mkdir(tmp)
     end
   end
 end
