@@ -4,6 +4,40 @@ path = File.expand_path("../../lib", __FILE__)
 $LOAD_PATH.unshift(path)
 
 require 'minecraft'
+require 'optparse'
 
-gen = Minecraft::ClientGenerator.new(username: "Papa")
-gen.generate
+options = {}
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{$0} [options]"
+  opts.separator ""
+
+  opts.on("-c", "--client USERNAME", String,
+          "The `username` to use when generating a client app") do |username|
+    options[:username] = username
+  end
+
+  opts.on("-s", "--server VERSION", String,
+          "The Minecraft server version") do |version|
+    options[:version] = version
+  end
+
+  opts.separator ""
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end
+parser.parse(ARGV)
+
+if username = options[:username]
+  Minecraft::ClientGenerator.new(username: username).generate
+
+elsif version = options[:version]
+  Minecraft::ServerGenerator.new(version: version).generate
+
+else
+  puts parser.help
+  exit 1
+end
+
