@@ -13,7 +13,7 @@ module Minecraft
       :minor_version,
       :launcher_version
 
-    def initialize(username:, filename: 'minecraft-client.sh')
+    def initialize(username:)
       @username = username
       @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
     end
@@ -39,7 +39,6 @@ module Minecraft
         /usr/local/bin/platypus -R
         -a '#{username} Minecraft'
         -o 'None'
-        -i '#{Minecraft.path("icons/minecraft-client.icns")}'
         -i '/Applications/Minecraft.app/Contents/Resources/favicon.icns'
         -V '#{version}'
         -u 'Tim Pease'
@@ -48,6 +47,10 @@ module Minecraft
       ]
 
       system args.join(" ")  # we want to see platypus output
+
+      # a bug in Platypus 5.1 prevents the -f / --bundled-file option from working
+      # see https://github.com/sveinbjornt/Platypus/issues/78
+      # this is our workaround for the time being
       FileUtils.cp_r(natives, "#{username} Minecraft.app/Contents/Resources/")
     ensure
       Dir.chdir(pwd)
