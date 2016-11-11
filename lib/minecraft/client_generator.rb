@@ -40,6 +40,7 @@ module Minecraft
         -a '#{username} Minecraft'
         -o 'None'
         -i '#{Minecraft.path("icons/minecraft-client.icns")}'
+        -i '/Applications/Minecraft.app/Contents/Resources/favicon.icns'
         -V '#{version}'
         -u 'Tim Pease'
         -I 'com.pea53.Minecraft.client'
