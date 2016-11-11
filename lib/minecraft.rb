@@ -42,8 +42,14 @@ module Minecraft
       File.join(PATH, "tmp") :
       File.join(PATH, "tmp", args.flatten)
   end
+
+  def self.players
+    @players ||= Players.new
+  end
 end
 
 require_relative 'minecraft/version'
+require_relative 'minecraft/player'
+require_relative 'minecraft/players'
 require_relative 'minecraft/client_generator'
 require_relative 'minecraft/server_generator'
