@@ -51,6 +51,22 @@ module Minecraft
   def self.players
     @players ||= Players.new
   end
+
+  def self.cleanup!
+    tmp = self.tmp
+    if File.exists?(tmp)
+      puts "Deleting the 'tmp' directory and all its contents"
+      FileUtils.rm_r(tmp)
+    end
+
+    pkg = self.path("pkg")
+    if File.exists?(pkg)
+      puts "Deleting the 'pkg' directory and all its contents"
+      FileUtils.rm_r(pkg)
+    end
+
+    nil
+  end
 end
 
 require_relative 'minecraft/version'

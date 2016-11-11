@@ -3,7 +3,6 @@ module Minecraft
     JAVA_MAIN = "net.minecraft.client.main.Main".freeze
 
     attr_reader \
-      :username,
       :app_support,
       :app_icon,
       :java_home,
@@ -14,9 +13,12 @@ module Minecraft
       :launcher_version
 
     def initialize(username:)
-      @username = username
-      @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
       @player = Minecraft.players[username]
+      @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
+    end
+
+    def username
+      @player.name
     end
 
     def uuid
@@ -57,6 +59,8 @@ module Minecraft
       # see https://github.com/sveinbjornt/Platypus/issues/78
       # this is our workaround for the time being
       FileUtils.cp_r(natives, "#{username} Minecraft.app/Contents/Resources/")
+
+      FileUtils.mv("#{username} Minecraft.app", Minecraft.path("pkg"))
     ensure
       Dir.chdir(pwd)
     end
@@ -123,8 +127,10 @@ module Minecraft
 
     def prepare!
       tmp = Minecraft.tmp
-      FileUtils.rm_r(tmp) if File.exists?(tmp)
-      FileUtils.mkdir(tmp)
+      FileUtils.mkdir(tmp) unless File.exists?(tmp)
+
+      pkg = Minecraft.path("pkg")
+      FileUtils.mkdir(pkg) unless File.exists?(pkg)
     end
   end
 end

@@ -1,10 +1,11 @@
 module Minecraft
   class ServerGenerator
 
-    attr_reader :version
+    attr_reader :version, :servername
 
-    def initialize(version:)
+    def initialize(version:, servername: "Minecraft Server")
       @version = version
+      @servername = servername
     end
 
     def generate
@@ -26,7 +27,7 @@ module Minecraft
 
       args = %W[
         /usr/local/bin/platypus -R
-        -a 'Minecraft Server'
+        -a '#{servername}'
         -o 'None'
         -i '#{Minecraft.path("icons/minecraft-server.icns")}'
         -V '#{version}'
@@ -40,7 +41,7 @@ module Minecraft
       # a bug in Platypus 5.1 prevents the -f / --bundled-file option from working
       # see https://github.com/sveinbjornt/Platypus/issues/78
       # this is our workaround for the time being
-      dest = "Minecraft Server.app/Contents/Resources/"
+      dest = "#{servername}.app/Contents/Resources/"
       FileUtils.cp(server_jar, dest)
 
       Dir.glob(Minecraft.path("files/*.json")).each { |fn| FileUtils.cp(fn, dest) }
@@ -49,6 +50,8 @@ module Minecraft
       FileUtils.cp(eula, dest)
       FileUtils.cp(ops, dest)
       FileUtils.cp(usercache, dest)
+
+      FileUtils.mv("#{servername}.app", Minecraft.path("pkg"))
 
     ensure
       Dir.chdir(pwd)
@@ -99,8 +102,10 @@ module Minecraft
 
     def prepare!
       tmp = Minecraft.tmp
-      FileUtils.rm_r(tmp) if File.exists?(tmp)
-      FileUtils.mkdir(tmp)
+      FileUtils.mkdir(tmp) unless File.exists?(tmp)
+
+      pkg = Minecraft.path("pkg")
+      FileUtils.mkdir(pkg) unless File.exists?(pkg)
     end
   end
 end

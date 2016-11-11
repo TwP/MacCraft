@@ -21,23 +21,45 @@ parser = OptionParser.new do |opts|
     options[:version] = version
   end
 
-  opts.separator ""
+  opts.on("-u", "--usercache",
+          "Generate a new 'usercache.json' file") do
+    options[:usercache] = true
+  end
 
+  opts.separator ""
+  opts.on("-C", "--cleanup",
+          "Remove generated files and package directory") do
+    Minecraft.cleanup!
+    exit
+  end
+
+  opts.separator ""
   opts.on("-h", "--help", "Prints this help") do
     puts opts
     exit
   end
 end
-parser.parse(ARGV)
+
+args = ARGV.dup
+parser.parse!(args)
 
 if username = options[:username]
   Minecraft::ClientGenerator.new(username: username).generate
 
-elsif version = options[:version]
-  Minecraft::ServerGenerator.new(version: version).generate
+elsif options[:version]
+  options[:servername] = args.first unless args.empty?
+  Minecraft::ServerGenerator.new(options).generate
+
+elsif options[:usercache]
+  File.open("usercache.json", "w") do |fd|
+    fd.write(JSON.generate(Minecraft.players.usercache))
+  end
 
 else
   puts parser.help
   exit 1
 end
+
+# Saving the players file is idempotent
+Minecraft.players.save_players
 
