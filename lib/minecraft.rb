@@ -46,3 +46,4 @@ end
 
 require_relative 'minecraft/version'
 require_relative 'minecraft/client_generator'
+require_relative 'minecraft/server_generator'
