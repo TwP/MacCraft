@@ -73,9 +73,6 @@ module Minecraft
       dest
     end
 
-    def template
-    end
-
     def datestamp
       Time.now.strftime("%a %b %d %H:%M:%S %Z %Y")  # Wed Nov 09 19:49:30 MST 2016
     end
