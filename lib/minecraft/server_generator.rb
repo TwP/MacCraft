@@ -21,6 +21,8 @@ module Minecraft
       scriptname = render_erb(filename: "minecraft-server.sh")
       properties = render_erb(filename: "server.properties")
       eula       = render_erb(filename: "eula.txt")
+      ops        = generate_ops
+      usercache  = generate_usercache
 
       args = %W[
         /usr/local/bin/platypus -R
@@ -45,9 +47,27 @@ module Minecraft
 
       FileUtils.cp(properties, dest)
       FileUtils.cp(eula, dest)
+      FileUtils.cp(ops, dest)
+      FileUtils.cp(usercache, dest)
 
     ensure
       Dir.chdir(pwd)
+    end
+
+    def generate_ops
+      filename = Minecraft.tmp("ops.json")
+      File.open(filename, "w") do |fd|
+        fd.write(JSON.pretty_generate(Minecraft.players.operators))
+      end
+      filename
+    end
+
+    def generate_usercache
+      filename = Minecraft.tmp("usercache.json")
+      File.open(filename, "w") do |fd|
+        fd.write(JSON.generate(Minecraft.players.usercache))
+      end
+      filename
     end
 
     def render_erb(filename:)
