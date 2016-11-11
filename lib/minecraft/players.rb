@@ -1,5 +1,3 @@
-require 'json'
-
 module Minecraft
   class Players
     include Enumerable
@@ -37,6 +35,24 @@ module Minecraft
       @hash.length
     end
     alias size length
+
+    # Emits player data in a format suitable for use as the `usercache.json`
+    # file. The data is an Array of Hash instances - so it will need to be
+    # converted to JSON format before being persisted to disk.
+    #
+    # Returns an Array of Hashes
+    def usercache
+      self.map { |_, player| player.to_usercache }
+    end
+
+    # Emits player data in a format suitable for use as the `ops.json`
+    # file. The data is an Array of Hash instances - so it will need to be
+    # converted to JSON format before being persisted to disk.
+    #
+    # Returns an Array of Hashes
+    def operators
+      self.map { |_, player| player.to_operator }.compact
+    end
 
     # Reads player information from the configured players `filename`. The JSON
     # data is converted into Player instances and stored in an internal Hash

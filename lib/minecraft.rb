@@ -1,5 +1,9 @@
+require 'date'
 require 'erb'
 require 'fileutils'
+require 'json'
+require 'securerandom'
+
 
 module Minecraft
   LIBPATH = File.expand_path('..', __FILE__)
@@ -43,6 +47,8 @@ module Minecraft
       File.join(PATH, "tmp", args.flatten)
   end
 
+  # Returns the Players container that provides access to all the persistent
+  # Player information.
   def self.players
     @players ||= Players.new
   end

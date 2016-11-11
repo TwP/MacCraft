@@ -1,6 +1,3 @@
-require 'date'
-require 'securerandom'
-
 module Minecraft
   class Player
 
@@ -12,20 +9,21 @@ module Minecraft
       @operator = operator
     end
 
+    # Returns this Player's UUID in a dashed hex-string format.
     def uuid
       @uuid ||= [4, 2, 2, 2, 6].map { |bytes| SecureRandom.hex(bytes) }.join("-")
     end
 
-    def compact_uuid
-      uuid.tr("-","")
-    end
-
+    # Returns `true` if this Player has operator privileges.
     def operator?
       !@operator.nil? &&
       @operator >= 1  &&
       @operator <= 4
     end
 
+    # Returns a Hash representation used to persist this Player to disk in our
+    # `players.json` file. This is an internal format that is not used by
+    # Minecraft.
     def to_hash
       {
         name: name,
@@ -34,11 +32,15 @@ module Minecraft
       }
     end
 
+    # Returns a Hash representation suitable for use in the `ops.json` server
+    # file.
     def to_operator
       return unless operator?
       to_hash.merge(bypassesPlayerLimit: false)
     end
 
+    # Returns a Hash representation suitable for use in the `usercache.json`
+    # server file.
     def to_usercache
       {
         name: name,
