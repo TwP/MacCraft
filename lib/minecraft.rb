@@ -4,7 +4,6 @@ require 'fileutils'
 require 'json'
 require 'securerandom'
 
-
 module Minecraft
   LIBPATH = File.expand_path('..', __FILE__)
   PATH    = File.expand_path('../..', __FILE__)

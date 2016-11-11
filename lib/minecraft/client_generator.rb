@@ -16,6 +16,11 @@ module Minecraft
     def initialize(username:)
       @username = username
       @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
+      @player = Minecraft.players[username]
+    end
+
+    def uuid
+      @player.uuid
     end
 
     def generate
