@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+path = File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift(path)
+
+require 'minecraft'
+
+gen = Minecraft::ClientGenerator.new(username: "Papa")
+gen.generate
