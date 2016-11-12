@@ -21,7 +21,7 @@ module MacCraft
 
       scriptname = render_erb(filename: "minecraft-server.sh")
       properties = render_erb(filename: "server.properties")
-      eula       = render_erb(filename: "eula.txt")
+      eula       = generate_eula
       ops        = generate_ops
       usercache  = generate_usercache
 
@@ -56,6 +56,17 @@ module MacCraft
 
     ensure
       Dir.chdir(pwd)
+    end
+
+    def generate_eula
+      filename = MacCraft.tmp("eula.txt")
+      File.open(filename, "w") do |fd|
+        fd.puts "# By changing the setting below to TRUE you are indicating your agreement to our EULA."
+        fd.puts "# https://account.mojang.com/documents/minecraft_eula"
+        fd.puts "# #{datestamp}"
+        fd.puts "eula=true"
+      end
+      filename
     end
 
     def generate_ops
