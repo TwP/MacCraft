@@ -86,14 +86,18 @@ module MacCraft
     # will extract the `JAVA_HOME` used to run Minecraft along with all the
     # flags and options passed to the JVM and the app itself.
     def parse(cmd: nil)
+      # figuring which Java version is being used so we can use it too
       cmd.slice! %r/(^.*)\/bin\/java\s+/
       @java_home = $1.sub(MINECRAFT_APP, "$APP")
 
-      cmd   = cmd.split(%r/(^.*)\s+#{Regexp.escape(JAVA_MAIN)}\s+(.*$)/).join(" ").strip
+      # remvoe the main Java class from the command line so we can get at all the flags
+      cmd   = cmd.sub(%r/\s+#{Regexp.escape(JAVA_MAIN)}\s+/, " ")
       flags = cmd.split(%r/\s+(?=-)/)
 
+      # iterate over the flags and pull out data we need
       flags.each { |flag| parse_flag(flag: flag) }
 
+      # replace the literal version number with a VERSION variable
       jars.each do |jar|
         next unless jar =~ %r/#{Regexp.escape(version)}\.jar$/
         jar.gsub!(version, "$VERSION")
@@ -106,14 +110,19 @@ module MacCraft
       case flag
       when %r/^-Xdock:icon=(.*)/
         @app_icon = $1.sub(app_support, "$APP_SUPPORT")
+
       when %r/^-Djava\.library\.path=(.*)/
         @java_library_path = $1
+
       when %r/^-cp\s+(.*)/
         @jars = $1.split(":").map { |jar| jar.sub(app_support, "$APP_SUPPORT") }
+
       when %r/^--version\s+(.*)/
         @version = $1
+
       when %r/^--assetIndex\s+(.*)/
         @minor_version = $1
+
       when %r/^--nativeLauncherVersion\s+(.*)/
         @launcher_version = $1
       end
