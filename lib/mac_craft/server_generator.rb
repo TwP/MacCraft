@@ -29,7 +29,7 @@ module MacCraft
         /usr/local/bin/platypus -R
         -a '#{servername}'
         -o 'None'
-        -i '#{Minecraft.path("icons/minecraft-server.icns")}'
+        -i '#{Minecraft.path("files/icons/minecraft-server.icns")}'
         -V '#{version}'
         -u 'Tim Pease'
         -I 'com.pea53.Minecraft.server'
