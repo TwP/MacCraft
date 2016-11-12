@@ -4,7 +4,7 @@ require 'fileutils'
 require 'json'
 require 'securerandom'
 
-module Minecraft
+module MacCraft
   LIBPATH = File.expand_path('..', __FILE__)
   PATH    = File.expand_path('../..', __FILE__)
 
@@ -77,9 +77,9 @@ module Minecraft
   end
 end
 
-require_relative 'minecraft/version'
-require_relative 'minecraft/player'
-require_relative 'minecraft/players'
-require_relative 'minecraft/app_grokker'
-require_relative 'minecraft/client_generator'
-require_relative 'minecraft/server_generator'
+require_relative 'mac_craft/version'
+require_relative 'mac_craft/player'
+require_relative 'mac_craft/players'
+require_relative 'mac_craft/app_grokker'
+require_relative 'mac_craft/client_generator'
+require_relative 'mac_craft/server_generator'

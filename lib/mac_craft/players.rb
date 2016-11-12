@@ -1,7 +1,7 @@
-module Minecraft
+module MacCraft
   class Players
     include Enumerable
-    PLAYERS_FILE = Minecraft.path("config/players.json")
+    PLAYERS_FILE = MacCraft.path("config/players.json")
 
     attr_reader :filename
 

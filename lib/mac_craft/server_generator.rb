@@ -1,4 +1,4 @@
-module Minecraft
+module MacCraft
   class ServerGenerator
 
     attr_reader :version, :servername
@@ -9,7 +9,7 @@ module Minecraft
     end
 
     def generate
-      Minecraft.prepare!
+      MacCraft.prepare!
 
       server_jar = download_server_jar
       package_app(server_jar: server_jar)
@@ -17,7 +17,7 @@ module Minecraft
 
     def package_app(server_jar:)
       pwd = Dir.pwd
-      Dir.chdir(Minecraft.tmp)
+      Dir.chdir(MacCraft.tmp)
 
       scriptname = render_erb(filename: "minecraft-server.sh")
       properties = render_erb(filename: "server.properties")
@@ -44,38 +44,38 @@ module Minecraft
       dest = "#{servername}.app/Contents/Resources/"
       FileUtils.cp(server_jar, dest)
 
-      Dir.glob(Minecraft.path("files/*.json")).each { |fn| FileUtils.cp(fn, dest) }
+      Dir.glob(MacCraft.path("files/*.json")).each { |fn| FileUtils.cp(fn, dest) }
 
       FileUtils.cp(properties, dest)
       FileUtils.cp(eula, dest)
       FileUtils.cp(ops, dest)
       FileUtils.cp(usercache, dest)
 
-      FileUtils.mv("#{servername}.app", Minecraft.path("pkg"))
+      FileUtils.mv("#{servername}.app", MacCraft.path("pkg"))
 
     ensure
       Dir.chdir(pwd)
     end
 
     def generate_ops
-      filename = Minecraft.tmp("ops.json")
+      filename = MacCraft.tmp("ops.json")
       File.open(filename, "w") do |fd|
-        fd.write(JSON.pretty_generate(Minecraft.players.operators))
+        fd.write(JSON.pretty_generate(MacCraft.players.operators))
       end
       filename
     end
 
     def generate_usercache
-      filename = Minecraft.tmp("usercache.json")
+      filename = MacCraft.tmp("usercache.json")
       File.open(filename, "w") do |fd|
-        fd.write(JSON.generate(Minecraft.players.usercache))
+        fd.write(JSON.generate(MacCraft.players.usercache))
       end
       filename
     end
 
     def render_erb(filename:)
-      template = Minecraft.path("files", "#{filename}.erb")
-      dest = Minecraft.tmp(filename)
+      template = MacCraft.path("files", "#{filename}.erb")
+      dest = MacCraft.tmp(filename)
 
       File.open(dest, "w") do |fd|
         renderer = ERB.new(File.read(template), nil, "<>")
@@ -88,7 +88,7 @@ module Minecraft
     def download_server_jar
       jar  = "minecraft_server.#{version}.jar"
       url  = "https://s3.amazonaws.com/Minecraft.Download/versions/#{version}/#{jar}"
-      dest = Minecraft.tmp(jar)
+      dest = MacCraft.tmp(jar)
 
       puts "Downloading jar #{url.inspect}"
       system "/usr/bin/curl -XGET '#{url}' > '#{dest}'"  # we want to see curl output

@@ -1,6 +1,6 @@
 require 'forwardable'
 
-module Minecraft
+module MacCraft
   class ClientGenerator
     extend Forwardable
 
@@ -16,7 +16,7 @@ module Minecraft
     ] => :@app_grokker
 
     def initialize(username:, app_grokker: nil)
-      @player = Minecraft.players[username]
+      @player = MacCraft.players[username]
       @app_grokker = app_grokker || AppGrokker.new
     end
 
@@ -29,7 +29,7 @@ module Minecraft
     end
 
     def generate
-      Minecraft.prepare!
+      MacCraft.prepare!
       @app_grokker.grok
 
       natives    = copy_native_libs
@@ -40,7 +40,7 @@ module Minecraft
 
     def package_app(scriptname:, natives:)
       pwd = Dir.pwd
-      Dir.chdir(Minecraft.tmp)
+      Dir.chdir(MacCraft.tmp)
 
       args = %W[
         /usr/local/bin/platypus -R
@@ -60,13 +60,13 @@ module Minecraft
       # this is our workaround for the time being
       FileUtils.cp_r(natives, "#{username} Minecraft.app/Contents/Resources/")
 
-      FileUtils.mv("#{username} Minecraft.app", Minecraft.path("pkg"))
+      FileUtils.mv("#{username} Minecraft.app", MacCraft.path("pkg"))
     ensure
       Dir.chdir(pwd)
     end
 
     def generate_script
-      scriptname = Minecraft.tmp("minecraft-client.sh")
+      scriptname = MacCraft.tmp("minecraft-client.sh")
       File.open(scriptname, "w") do |fd|
         renderer = ERB.new(template, nil, "<>")
         fd.write(renderer.result(binding))
@@ -76,7 +76,7 @@ module Minecraft
 
     def copy_native_libs
       src  = java_library_path
-      dest = Minecraft.tmp("natives")
+      dest = MacCraft.tmp("natives")
 
       FileUtils.rm_r(dest) if File.exists?(dest)
       FileUtils.cp_r(src, dest)
@@ -84,7 +84,7 @@ module Minecraft
     end
 
     def template
-      File.read(Minecraft.path("files/minecraft-client.sh.erb"))
+      File.read(MacCraft.path("files/minecraft-client.sh.erb"))
     end
   end
 end

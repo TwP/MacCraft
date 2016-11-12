@@ -3,7 +3,7 @@
 path = File.expand_path("../../lib", __FILE__)
 $LOAD_PATH.unshift(path)
 
-require 'minecraft'
+require 'mac_craft'
 require 'optparse'
 
 options = {}
@@ -29,7 +29,7 @@ parser = OptionParser.new do |opts|
   opts.separator ""
   opts.on("-C", "--cleanup",
           "Remove generated files and package directory") do
-    Minecraft.cleanup!
+    MacCraft.cleanup!
     exit
   end
 
@@ -44,15 +44,15 @@ args = ARGV.dup
 parser.parse!(args)
 
 if username = options[:username]
-  Minecraft::ClientGenerator.new(username: username).generate
+  MacCraft::ClientGenerator.new(username: username).generate
 
 elsif options[:version]
   options[:servername] = args.first unless args.empty?
-  Minecraft::ServerGenerator.new(options).generate
+  MacCraft::ServerGenerator.new(options).generate
 
 elsif options[:usercache]
   File.open("usercache.json", "w") do |fd|
-    fd.write(JSON.generate(Minecraft.players.usercache))
+    fd.write(JSON.generate(MacCraft.players.usercache))
   end
 
 else
@@ -61,5 +61,5 @@ else
 end
 
 # Saving the players file is idempotent
-Minecraft.players.save_players
+MacCraft.players.save_players
 

@@ -1,4 +1,4 @@
-module Minecraft
+module MacCraft
 
   # This class bares a little explaining - it is central to this whole setup. We
   # want to create standalone applications that directly launch the Mincraft app

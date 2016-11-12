@@ -1,4 +1,4 @@
-module Minecraft
+module MacCraft
   class Player
 
     attr_reader :name, :operator
