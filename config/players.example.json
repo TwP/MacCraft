@@ -1,8 +1,7 @@
 [
   {
     "name": "player-1",
-    "uuid": "e2e99e1c-0224-c566-3031-fc10d0466d6f7b08",
-    "operator": null
+    "uuid": "e2e99e1c-0224-c566-3031-fc10d0466d6f7b08"
   },
   {
     "name": "player-2",
@@ -13,5 +12,8 @@
     "name": "player-3",
     "uuid": "edf809b9-4cc0-8636-67c8-8deaa04566c36ce8",
     "operator": 2
+  },
+  {
+    "name": "player-4"
   }
 ]
