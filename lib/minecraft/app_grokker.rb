@@ -35,6 +35,8 @@ module Minecraft
     # all the attributes of this class will be populated with values. If the
     # Minecraft app is not running, we make an attempt to start the app.
     def grok
+      installed?
+
       cmd = get_command
       if cmd.nil? || cmd.empty?
         launch_minecraft!
@@ -44,6 +46,13 @@ module Minecraft
 
       parse(cmd: cmd)
       self
+    end
+
+    # Returns `true` if Minecraft is installed in the usual location. Otherwise
+    # this method will abort the program with a nice message.
+    def installed?
+      return true if File.exists?(MINECRAFT_APP)
+      abort "Sorry, Minecraft does not appear to be installed :("
     end
 
     # Fire up the Minecraft launcher and then ask the user to start the
