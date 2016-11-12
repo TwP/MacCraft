@@ -36,7 +36,12 @@ module MacCraft
     # file.
     def to_operator
       return unless operator?
-      to_hash.merge(bypassesPlayerLimit: false)
+      {
+        name: name,
+        uuid: uuid,
+        level: operator,
+        bypassesPlayerLimit: false
+      }
     end
 
     # Returns a Hash representation suitable for use in the `usercache.json`
