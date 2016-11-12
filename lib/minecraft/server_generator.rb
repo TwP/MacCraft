@@ -9,7 +9,7 @@ module Minecraft
     end
 
     def generate
-      prepare!
+      Minecraft.prepare!
 
       server_jar = download_server_jar
       package_app(server_jar: server_jar)
@@ -98,14 +98,6 @@ module Minecraft
 
     def datestamp
       Time.now.strftime("%a %b %d %H:%M:%S %Z %Y")  # Wed Nov 09 19:49:30 MST 2016
-    end
-
-    def prepare!
-      tmp = Minecraft.tmp
-      FileUtils.mkdir(tmp) unless File.exists?(tmp)
-
-      pkg = Minecraft.path("pkg")
-      FileUtils.mkdir(pkg) unless File.exists?(pkg)
     end
   end
 end

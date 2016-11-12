@@ -1,20 +1,23 @@
+require 'forwardable'
+
 module Minecraft
   class ClientGenerator
-    JAVA_MAIN = "net.minecraft.client.main.Main".freeze
+    extend Forwardable
 
-    attr_reader \
-      :app_support,
-      :app_icon,
-      :java_home,
-      :java_library_path,
-      :jars,
-      :version,
-      :minor_version,
-      :launcher_version
+    delegate %i[
+      app_support
+      app_icon
+      java_home
+      java_library_path
+      jars
+      version
+      minor_version
+      launcher_version
+    ] => :@app_grokker
 
-    def initialize(username:)
+    def initialize(username:, app_grokker: nil)
       @player = Minecraft.players[username]
-      @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
+      @app_grokker = app_grokker || AppGrokker.new
     end
 
     def username
@@ -26,11 +29,8 @@ module Minecraft
     end
 
     def generate
-      cmd = command
-      abort "Minecraft does not appear to be running" if cmd.nil? || cmd.empty?
-
-      prepare!
-      parse(cmd: cmd)
+      Minecraft.prepare!
+      @app_grokker.grok
 
       natives    = copy_native_libs
       scriptname = generate_script
@@ -83,54 +83,8 @@ module Minecraft
       dest
     end
 
-    def command
-      cmd = %x(ps -xo command | grep -i '#{JAVA_MAIN}' | grep -v grep)
-      cmd.strip!
-      cmd
-    end
-
-    def parse(cmd: nil)
-      cmd.slice! %r/(^.*)\/bin\/java\s+/
-      @java_home = $1.sub("/Applications/Minecraft.app", "$APP")
-
-      cmd   = cmd.split(%r/(^.*)\s+#{Regexp.escape(JAVA_MAIN)}\s+(.*$)/).join(" ").strip
-      flags = cmd.split(%r/\s+(?=-)/)
-
-      flags.each { |flag| parse_flag(flag: flag) }
-
-      jars.each do |jar|
-        next unless jar =~ %r/#{Regexp.escape(version)}\.jar$/
-        jar.gsub!(version, "$VERSION")
-      end
-    end
-
-    def parse_flag(flag:)
-      case flag
-      when %r/^-Xdock:icon=(.*)/
-        @app_icon = $1.sub(app_support, "$APP_SUPPORT")
-      when %r/^-Djava\.library\.path=(.*)/
-        @java_library_path = $1
-      when %r/^-cp\s+(.*)/
-        @jars = $1.split(":").map { |jar| jar.sub(app_support, "$APP_SUPPORT") }
-      when %r/^--version\s+(.*)/
-        @version = $1
-      when %r/^--assetIndex\s+(.*)/
-        @minor_version = $1
-      when %r/^--nativeLauncherVersion\s+(.*)/
-        @launcher_version = $1
-      end
-    end
-
     def template
       File.read(Minecraft.path("files/minecraft-client.sh.erb"))
-    end
-
-    def prepare!
-      tmp = Minecraft.tmp
-      FileUtils.mkdir(tmp) unless File.exists?(tmp)
-
-      pkg = Minecraft.path("pkg")
-      FileUtils.mkdir(pkg) unless File.exists?(pkg)
     end
   end
 end
