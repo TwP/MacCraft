@@ -1,6 +1,6 @@
 module MacCraft
 
-  # This class bares a little explaining - it is central to this whole setup. We
+  # This class bears a little explaining - it is central to this whole setup. We
   # want to create standalone applications that directly launch the Mincraft app
   # already configured with a player name and a UUID. In order to do this, we
   # have to start the real Minecraft app and then parse the command line options
