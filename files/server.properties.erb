@@ -2,19 +2,66 @@
 # http://minecraft.gamepedia.com/Server.properties
 # <%= datestamp %>
 
-allow-flight=true
+# Defines the mode of gameplay.
+#   0 - Survival
+#   1 - Creative
+#   2 - Adventure
+#   3 - Spectator
+gamemode=1
+
+# Force players to join in the default game mode.
+#   false - Players will join in the gamemode they left in.
+#   true  - Players will always join in the default gamemode.
+force-gamemode=false
+
+# Defines the difficulty (such as damage dealt by mobs and the way
+# hunger and poison affects players) of the server.
+#   0 - Peaceful
+#   1 - Easy
+#   2 - Normal
+#   3 - Hard
+difficulty=1
+
+# If set to true, players will be set to spectator mode if they die.
+hardcore=false
+
+# Enable Player-vs-Player (PvP) on the server. Players shooting themselves
+# with arrows will only receive damage if PvP is enabled.
+#   true  - Players will be able to kill each other.
+#   false - Players cannot kill other players (also known as Player-vs-Environment (PvE)).
+pvp=true
+
+# Sets the default permission level for operators.
+#   1 - can bypass spawn protection.
+#   2 - can use /clear, /difficulty, /effect, /gamemode, /gamerule, /give, and /tp, and can edit command blocks.
+#   3 - can use /ban, /deop, /kick, and /op.
+#   4 - can use /stop.
+op-permission-level=2
+
+# This is the message that is displayed in the server list of the client,
+# below the name. It is configured to be set to the server name.
+motd=<%= servername %>
+
+# Server checks connecting players against Minecraft's account database. Only
+# set this to false if your server is not connected to the Internet. Hackers
+# with fake accounts can connect if this is set to false! If minecraft.net is
+# down or inaccessible, no players will be able to connect if this is set to
+# true. Setting this variable to off purposely is called "cracking" a server,
+# and servers that are presently with online mode off are called "cracked"
+# servers, allowing players with unlicensed copies of Minecraft to join.
+#   true  - Enabled. The server will assume it has an Internet connection and check every connecting player.
+#   false - Disabled. The server will not attempt to check connecting players.
+online-mode=false
+
+allow-flight=false
 allow-nether=true
 announce-player-achievements=true
 debug=false
-difficulty=1
-enable-command-block=true
+enable-command-block=false
 enable-query=false
 enable-rcon=false
-force-gamemode=false
-gamemode=1
 generate-structures=true
 generator-settings=
-hardcore=false
 level-name=world
 level-seed=
 level-type=DEFAULT
@@ -22,12 +69,8 @@ max-build-height=256
 max-players=10
 max-tick-time=60000
 max-world-size=29999984
-motd=Pea53 Minecraft Server
 network-compression-threshold=256
-online-mode=false
-op-permission-level=2
 player-idle-timeout=0
-pvp=true
 query.port=25565
 rcon.password=
 rcon.port=25575
