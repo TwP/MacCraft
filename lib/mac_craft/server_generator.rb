@@ -102,8 +102,12 @@ module MacCraft
       url  = "https://s3.amazonaws.com/Minecraft.Download/versions/#{version}/#{jar}"
       dest = MacCraft.tmp(jar)
 
-      puts "Downloading jar #{url.inspect}"
-      system "/usr/bin/curl -XGET '#{url}' > '#{dest}'"  # we want to see curl output
+      if File.exists? dest
+        puts "Using downloaded jar at 'tmp/#{jar}'"
+      else
+        puts "Downloading jar #{url.inspect}"
+        system "/usr/bin/curl -XGET '#{url}' > '#{dest}'"  # we want to see curl output
+      end
 
       dest
     end
