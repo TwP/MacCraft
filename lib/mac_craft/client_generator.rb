@@ -61,6 +61,8 @@ module MacCraft
       FileUtils.cp_r(natives, "#{username} Minecraft.app/Contents/Resources/")
 
       FileUtils.mv("#{username} Minecraft.app", MacCraft.path("pkg"))
+      puts "\nYour client is ready: `pkg/#{username} Minecraft.app`"
+
     ensure
       Dir.chdir(pwd)
     end

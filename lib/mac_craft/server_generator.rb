@@ -52,6 +52,7 @@ module MacCraft
       FileUtils.cp(usercache, dest)
 
       FileUtils.mv("#{servername}.app", MacCraft.path("pkg"))
+      puts "\nYour server is ready: `pkg/#{servername}.app`"
 
     ensure
       Dir.chdir(pwd)
