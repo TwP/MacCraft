@@ -2,6 +2,7 @@
 
 tap "caskroom/cask"
 cask "java"
+cask "minecraft"
 brew "platypus"
 
 # vim:ft=ruby
