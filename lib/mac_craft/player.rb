@@ -50,7 +50,7 @@ module MacCraft
       {
         name: name,
         uuid: uuid,
-        expiresOn: (DateTime.now + 60).strftime("%Y-%m-%d %H:%M:%S %z")  # in 60 days
+        expiresOn: (DateTime.now + 365).strftime("%Y-%m-%d %H:%M:%S %z")  # in 365 days
       }
     end
   end
