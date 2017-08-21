@@ -22,13 +22,17 @@ CLASSPATH="$CLASSPATH:<%= jar %>"
 
 # start the Minecraft client
 exec $JAVA_HOME/bin/java \
-  -Xdock:icon="$APP_ICON" \
   -Xdock:name=Minecraft \
-  -Xms512M -Xmx1G -Xmn128M \
+  -Xdock:icon="$APP_ICON" \
+  -Xms512M -Xmx2G -Xmn128M \
   -XX:+UseConcMarkSweepGC \
   -XX:+CMSIncrementalMode \
   -XX:-UseAdaptiveSizePolicy \
   -Djava.library.path="natives" \
+  -Dlog4j.configurationFile="$APP_SUPPORT/assets/log_configs/client-<%= minor_version %>.xml" \
+  -Dminecraft.client.jar="$APP_SUPPORT/versions/$VERSION/$VERSION.jar" \
+  -Dminecraft.launcher.version=<%= launcher_version %> \
+  -Dminecraft.launcher.brand=minecraft-launcher \
   -cp "$CLASSPATH" \
   net.minecraft.client.main.Main \
   --username "$USERNAME" \
@@ -40,9 +44,5 @@ exec $JAVA_HOME/bin/java \
   --accessToken "$ACCESS_TOKEN" \
   --userProperties {} \
   --userType mojang \
-  --versionType release \
-  --nativePath "$APP" \
-  --nativeStartupPath "$APP/Contents" \
-  --nativeExecutable "$APP/Contents/MacOS/launcher" \
-  --nativeLauncherVersion <%= launcher_version %>
+  --versionType release
 
