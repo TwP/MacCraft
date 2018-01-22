@@ -28,6 +28,27 @@ module MacCraft
       @player.uuid
     end
 
+    def upgrade(app:)
+      resources = "#{app}/Contents/Resources"
+
+      unless app =~ %r/\.app\Z/ && File.directory?(app) && File.directory?(resources) &&
+             File.directory?("#{resources}/natives") && Dir.glob("#{resources}/minecraft_server.*.jar").empty?
+        puts "Skipping #{app.inspect} - doest not appear to be a Minecraft client application"
+        return
+      end
+
+      puts "Upgrading client #{app.inspect} to version #{version} [#{username}]"
+      MacCraft.prepare!
+
+      natives    = copy_native_libs
+      scriptname = generate_script
+
+      FileUtils.rm_r("#{resources}/natives") if File.exists?("#{resources}/natives")
+      FileUtils.cp_r(natives, resources)
+      FileUtils.cp(scriptname, "#{resources}/script")
+      FileUtils.chmod(0755, "#{resources}/script")
+    end
+
     def generate
       MacCraft.prepare!
       @app_grokker.grok

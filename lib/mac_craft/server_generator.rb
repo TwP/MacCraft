@@ -17,9 +17,9 @@ module MacCraft
 
     def upgrade(app:)
       resources = "#{app}/Contents/Resources"
-      glob = "#{resources}/minecraft_server.*.jar"
+      jars = "#{resources}/minecraft_server.*.jar"
 
-      unless app =~ %r/\.app\Z/ && File.directory?(app) && File.directory?(resources) && !Dir.glob(glob).empty?
+      unless app =~ %r/\.app\Z/ && File.directory?(app) && File.directory?(resources) && !Dir.glob(jars).empty?
         puts "Skipping #{app.inspect} - does not appear to be a Minecraft server application"
         return
       end
@@ -31,10 +31,11 @@ module MacCraft
       scriptname = render_erb(filename: "minecraft-server.sh")
       usercache  = generate_usercache
 
-      Dir.glob(glob) { |file| FileUtils.rm file }
+      Dir.glob(jars) { |jar| FileUtils.rm jar }
       FileUtils.cp(server_jar, resources)
-      FileUtils.cp(scriptname, resources)
       FileUtils.cp(usercache, resources)
+      FileUtils.cp(scriptname, "#{resources}/script")
+      FileUtils.chmod(0755, "#{resources}/script")
     end
 
     def package_app(server_jar:)
