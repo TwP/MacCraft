@@ -21,6 +21,12 @@ parser = OptionParser.new do |opts|
     options[:version] = version
   end
 
+  opts.on("-U", "--upgrade PATH", String,
+          "Upgrade Minecraft apps") do |appdir|
+    options[:upgrade] = appdir
+  end
+
+
   opts.on("-u", "--usercache",
           "Generate a new 'usercache.json' file") do
     options[:usercache] = true
@@ -50,6 +56,9 @@ elsif options[:version]
   options[:servername] = args.first unless args.empty?
   MacCraft::ServerGenerator.new(options).generate
 
+elsif app_path = options[:upgrade]
+  MacCraft::UpgradeApps.new(path: app_path).upgrade
+
 elsif options[:usercache]
   File.open("usercache.json", "w") do |fd|
     fd.write(JSON.generate(MacCraft.players.usercache))
@@ -62,4 +71,3 @@ end
 
 # Saving the players file is idempotent
 MacCraft.players.save_players
-
