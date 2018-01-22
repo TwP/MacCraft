@@ -15,6 +15,28 @@ module MacCraft
       package_app(server_jar: server_jar)
     end
 
+    def upgrade(app:)
+      resources = "#{app}/Contents/Resources"
+      glob = "#{resources}/minecraft_server.*.jar"
+
+      unless app =~ %r/\.app\Z/ && File.directory?(app) && File.directory?(resources) && !Dir.glob(glob).empty?
+        puts "Skipping #{app.inspect} - does not appear to be a Minecraft server application"
+        return
+      end
+
+      puts "Upgrading server #{app.inspect} to version #{version}"
+      MacCraft.prepare!
+
+      server_jar = download_server_jar
+      scriptname = render_erb(filename: "minecraft-server.sh")
+      usercache  = generate_usercache
+
+      Dir.glob(glob) { |file| FileUtils.rm file }
+      FileUtils.cp(server_jar, resources)
+      FileUtils.cp(scriptname, resources)
+      FileUtils.cp(usercache, resources)
+    end
+
     def package_app(server_jar:)
       pwd = Dir.pwd
       Dir.chdir(MacCraft.tmp)
