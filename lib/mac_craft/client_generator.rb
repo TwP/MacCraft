@@ -5,14 +5,12 @@ module MacCraft
     extend Forwardable
 
     delegate %i[
-      app_support
-      app_icon
       java_home
       java_library_path
+      java_opts
       jars
       version
-      minor_version
-      launcher_version
+      minecraft_opts
     ] => :@app_grokker
 
     def initialize(username:, app_grokker: nil)
@@ -80,6 +78,7 @@ module MacCraft
       # see https://github.com/sveinbjornt/Platypus/issues/78
       # this is our workaround for the time being
       FileUtils.cp_r(natives, "#{username} Minecraft.app/Contents/Resources/")
+      FileUtils.mkdir("#{username} Minecraft.app/Contents/Resources/logs")
 
       FileUtils.mv("#{username} Minecraft.app", MacCraft.path("pkg"))
       puts "\nYour client is ready: `pkg/#{username} Minecraft.app`"

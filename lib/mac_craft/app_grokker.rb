@@ -17,18 +17,19 @@ module MacCraft
     # command line options
     attr_reader \
       :app_support,
-      :app_icon,
       :java_home,
       :java_library_path,
+      :java_opts,
       :jars,
       :version,
-      :minor_version,
-      :launcher_version
+      :minecraft_opts
 
     # Standard initializer that expands out the full application support path
     # for the Minecraft application.
-    def initialize
-      @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
+    def initialize(app_support: File.expand_path("~/Library/Application Support/minecraft"))
+      @app_support = app_support.freeze
+      @java_opts = []
+      @minecraft_opts = []
     end
 
     # Do the actual command line retrieval and parsing. The ned result is that
@@ -108,23 +109,31 @@ module MacCraft
     # later use.
     def parse_flag(flag:)
       case flag
-      when %r/^-Xdock:icon=(.*)/
-        @app_icon = $1.sub(app_support, "$APP_SUPPORT")
-
-      when %r/^-Djava\.library\.path=(.*)/
+      when %r/\A-Djava\.library\.path=(.*)/
         @java_library_path = $1
 
-      when %r/^-cp\s+(.*)/
+      when %r/\A-cp\s+(.*)/
         @jars = $1.split(":").map { |jar| jar.sub(app_support, "$APP_SUPPORT") }
 
-      when %r/^--version\s+(.*)/
+      when %r/\A--version\s+(.*)/
         @version = $1
 
-      when %r/^--assetIndex\s+(.*)/
-        @minor_version = $1
+      # remove user-specific game settings
+      when %r/\A--(?:username|uuid|accessToken)\s+/
+        nil
 
-      when %r/-Dminecraft\.launcher\.version=(.*)/
-        @launcher_version = $1
+      when %r/\A(--[[:alpha:]]+)\s+(.*)/
+        option = $1
+        value = $2.sub(app_support, "$APP_SUPPORT")
+        @minecraft_opts << "#{option} \"#{value}\""
+
+      when %r/\A(-[A-Za-z][^=\s]+)(?:=(.*))?/
+        option = $1
+        if $2
+          value = $2 ? $2.sub(app_support, "$APP_SUPPORT") : nil
+          option = "#{option}=\"#{value}\""
+        end
+        @java_opts << option
       end
     end
   end

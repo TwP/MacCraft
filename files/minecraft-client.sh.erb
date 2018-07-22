@@ -8,7 +8,6 @@ ACCESS_TOKEN=""
 
 APP="/Applications/Minecraft.app"
 APP_SUPPORT="$HOME/Library/Application Support/minecraft"
-APP_ICON="<%= app_icon %>"
 
 JAVA_HOME="<%= java_home %>"
 
@@ -22,27 +21,17 @@ CLASSPATH="$CLASSPATH:<%= jar %>"
 
 # start the Minecraft client
 exec $JAVA_HOME/bin/java \
-  -Xdock:name=Minecraft \
-  -Xdock:icon="$APP_ICON" \
-  -Xms512M -Xmx2G -Xmn128M \
-  -XX:+UseConcMarkSweepGC \
-  -XX:+CMSIncrementalMode \
-  -XX:-UseAdaptiveSizePolicy \
+<% java_opts.each do |opt| %>
+  <%= opt %> \
+<% end %>
   -Djava.library.path="natives" \
-  -Dlog4j.configurationFile="$APP_SUPPORT/assets/log_configs/client-<%= minor_version %>.xml" \
-  -Dminecraft.client.jar="$APP_SUPPORT/versions/$VERSION/$VERSION.jar" \
-  -Dminecraft.launcher.version=<%= launcher_version %> \
-  -Dminecraft.launcher.brand=minecraft-launcher \
   -cp "$CLASSPATH" \
   net.minecraft.client.main.Main \
-  --username "$USERNAME" \
+<% minecraft_opts.each do |opt| %>
+  <%= opt %> \
+<% end %>
   --version "$VERSION" \
-  --gameDir "$APP_SUPPORT" \
-  --assetsDir "$APP_SUPPORT/assets" \
-  --assetIndex <%= minor_version %> \
+  --username "$USERNAME" \
   --uuid "$UUID" \
-  --accessToken "$ACCESS_TOKEN" \
-  --userProperties {} \
-  --userType mojang \
-  --versionType release
+  --accessToken "$ACCESS_TOKEN"
 
