@@ -6,7 +6,6 @@ module MacCraft
 
     delegate %i[
       app_support
-      app_icon
       java_home
       java_library_path
       jars

@@ -17,7 +17,6 @@ module MacCraft
     # command line options
     attr_reader \
       :app_support,
-      :app_icon,
       :java_home,
       :java_library_path,
       :jars,
@@ -108,9 +107,6 @@ module MacCraft
     # later use.
     def parse_flag(flag:)
       case flag
-      when %r/^-Xdock:icon=(.*)/
-        @app_icon = $1.sub(app_support, "$APP_SUPPORT")
-
       when %r/^-Djava\.library\.path=(.*)/
         @java_library_path = $1
 
