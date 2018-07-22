@@ -21,13 +21,6 @@ CLASSPATH="$CLASSPATH:<%= jar %>"
 
 # start the Minecraft client
 exec $JAVA_HOME/bin/java \
-  -Xdock:name=Minecraft \
-  -Xms512M -Xmx2G -Xmn128M \
-  -XX:+UseConcMarkSweepGC \
-  -XX:+CMSIncrementalMode \
-  -XX:-UseAdaptiveSizePolicy \
-  -Dminecraft.client.jar="$APP_SUPPORT/versions/$VERSION/$VERSION.jar" \
-  -Dminecraft.launcher.brand=minecraft-launcher \
 <% java_opts.each do |opt| %>
   <%= opt %> \
 <% end %>

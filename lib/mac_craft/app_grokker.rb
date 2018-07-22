@@ -19,9 +19,9 @@ module MacCraft
       :app_support,
       :java_home,
       :java_library_path,
+      :java_opts,
       :jars,
       :version,
-      :java_opts,
       :minecraft_opts
 
     # Standard initializer that expands out the full application support path
