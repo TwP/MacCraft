@@ -26,7 +26,6 @@ exec $JAVA_HOME/bin/java \
   -XX:+UseConcMarkSweepGC \
   -XX:+CMSIncrementalMode \
   -XX:-UseAdaptiveSizePolicy \
-  -Dlog4j.configurationFile="$APP_SUPPORT/assets/log_configs/client-<%= minor_version %>.xml" \
   -Dminecraft.client.jar="$APP_SUPPORT/versions/$VERSION/$VERSION.jar" \
   -Dminecraft.launcher.brand=minecraft-launcher \
 <% java_opts.each do |opt| %>
@@ -35,13 +34,11 @@ exec $JAVA_HOME/bin/java \
   -Djava.library.path="natives" \
   -cp "$CLASSPATH" \
   net.minecraft.client.main.Main \
-  --username "$USERNAME" \
+<% minecraft_opts.each do |opt| %>
+  <%= opt %> \
+<% end %>
   --version "$VERSION" \
-  --gameDir "$APP_SUPPORT" \
-  --assetsDir "$APP_SUPPORT/assets" \
-  --assetIndex <%= minor_version %> \
+  --username "$USERNAME" \
   --uuid "$UUID" \
-  --accessToken "$ACCESS_TOKEN" \
-  --userType mojang \
-  --versionType release
+  --accessToken "$ACCESS_TOKEN"
 

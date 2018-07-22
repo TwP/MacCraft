@@ -20,11 +20,10 @@ class AppGrokkerTest < Test::Unit::TestCase
     assert_equal 34, @grokker.jars.length
     assert_equal "$APP_SUPPORT/libraries/com/mojang/patchy/1.1/patchy-1.1.jar", @grokker.jars.first
 
-    assert_equal "1.12.2",   @grokker.version
-    assert_equal "1.12",     @grokker.minor_version
+    assert_equal "1.12.2", @grokker.version
 
     refute @grokker.minecraft_opts.include?("--username TestUser")
-    assert_equal ["--gameDir $APP_SUPPORT", "--assetsDir $APP_SUPPORT/assets", "--userType mojang", "--versionType release"], @grokker.minecraft_opts
+    assert_equal ["--gameDir $APP_SUPPORT", "--assetsDir $APP_SUPPORT/assets", "--assetIndex 1.12", "--userType mojang", "--versionType release"], @grokker.minecraft_opts
     assert_equal 13, @grokker.java_opts.length
   end
 

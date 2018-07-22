@@ -21,7 +21,6 @@ module MacCraft
       :java_library_path,
       :jars,
       :version,
-      :minor_version,
       :java_opts,
       :minecraft_opts
 
@@ -118,9 +117,6 @@ module MacCraft
 
       when %r/\A--version\s+(.*)/
         @version = $1
-
-      when %r/\A--assetIndex\s+(.*)/
-        @minor_version = $1
 
       # remove user-specific game settings
       when %r/\A--(?:username|uuid|accessToken)\s+/

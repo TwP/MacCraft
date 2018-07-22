@@ -10,7 +10,6 @@ module MacCraft
       java_opts
       jars
       version
-      minor_version
       minecraft_opts
     ] => :@app_grokker
 
