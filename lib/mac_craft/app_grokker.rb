@@ -111,27 +111,37 @@ module MacCraft
     # later use.
     def parse_flag(flag:)
       case flag
-      when %r/^-Djava\.library\.path=(.*)/
+      when %r/\A-Djava\.library\.path=(.*)/
         @java_library_path = $1
 
-      when %r/^-cp\s+(.*)/
+      when %r/\A-cp\s+(.*)/
         @jars = $1.split(":").map { |jar| jar.sub(app_support, "$APP_SUPPORT") }
 
-      when %r/^--version\s+(.*)/
+      when %r/\A--version\s+(.*)/
         @version = $1
 
-      when %r/^--assetIndex\s+(.*)/
+      when %r/\A--assetIndex\s+(.*)/
         @minor_version = $1
 
-      when %r/^-Dminecraft\.launcher\.version=(.*)/
+      when %r/\A-Dminecraft\.launcher\.version=(.*)/
         @launcher_version = $1
 
       # remove user-specific game settings
       when %r/\A--(?:username|uuid|accessToken)\s+/
         nil
 
-      when %r/\A--[[:alpha:]]+\s+/
-        @minecraft_opts << flag
+      when %r/\A(--[[:alpha:]]+)\s+(.*)/
+        option = $1
+        value = $2.sub(app_support, "$APP_SUPPORT")
+        @minecraft_opts << "#{option} #{value}"
+
+      when %r/\A(-[A-Za-z][^=\s]+)(?:=(.*))?/
+        option = $1
+        if $2
+          value = $2 ? $2.sub(app_support, "$APP_SUPPORT") : nil
+          option = "#{option}=#{value}"
+        end
+        @java_opts << option
       end
     end
   end
