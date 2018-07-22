@@ -22,11 +22,10 @@ class AppGrokkerTest < Test::Unit::TestCase
 
     assert_equal "1.12.2",   @grokker.version
     assert_equal "1.12",     @grokker.minor_version
-    assert_equal "2.1.1217", @grokker.launcher_version
 
     refute @grokker.minecraft_opts.include?("--username TestUser")
     assert_equal ["--gameDir $APP_SUPPORT", "--assetsDir $APP_SUPPORT/assets", "--userType mojang", "--versionType release"], @grokker.minecraft_opts
-    assert_equal 12, @grokker.java_opts.length
+    assert_equal 13, @grokker.java_opts.length
   end
 
 end

@@ -5,13 +5,13 @@ module MacCraft
     extend Forwardable
 
     delegate %i[
-      app_support
       java_home
       java_library_path
+      java_opts
       jars
       version
       minor_version
-      launcher_version
+      minecraft_opts
     ] => :@app_grokker
 
     def initialize(username:, app_grokker: nil)

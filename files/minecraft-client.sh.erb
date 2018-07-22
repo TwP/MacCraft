@@ -26,11 +26,13 @@ exec $JAVA_HOME/bin/java \
   -XX:+UseConcMarkSweepGC \
   -XX:+CMSIncrementalMode \
   -XX:-UseAdaptiveSizePolicy \
-  -Djava.library.path="natives" \
   -Dlog4j.configurationFile="$APP_SUPPORT/assets/log_configs/client-<%= minor_version %>.xml" \
   -Dminecraft.client.jar="$APP_SUPPORT/versions/$VERSION/$VERSION.jar" \
-  -Dminecraft.launcher.version=<%= launcher_version %> \
   -Dminecraft.launcher.brand=minecraft-launcher \
+<% java_opts.each do |opt| %>
+  <%= opt %> \
+<% end %>
+  -Djava.library.path="natives" \
   -cp "$CLASSPATH" \
   net.minecraft.client.main.Main \
   --username "$USERNAME" \
