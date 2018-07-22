@@ -12,7 +12,7 @@ class AppGrokkerTest < Test::Unit::TestCase
   def teardown
   end
 
-  def test_parse
+  def test_parse_1_12_2
     @grokker.parse(cmd: @command_1_12_2)
 
     assert_equal "/var/folders/sy/p1bx4_kd5lj483jsslw34x2m0000gn/T/ba08-e84b-9fb7-2ec9", @grokker.java_library_path
@@ -27,4 +27,18 @@ class AppGrokkerTest < Test::Unit::TestCase
     assert_equal 13, @grokker.java_opts.length
   end
 
+  def test_parse_1_13
+    @grokker.parse(cmd: @command_1_13)
+
+    assert_equal "/var/folders/sy/p1bx4_kd5lj483jsslw34x2m0000gn/T/d266-2718-dd7e-b63d", @grokker.java_library_path
+
+    assert_equal 39, @grokker.jars.length
+    assert_equal "$APP_SUPPORT/libraries/com/mojang/patchy/1.1/patchy-1.1.jar", @grokker.jars.first
+
+    assert_equal "1.13", @grokker.version
+
+    refute @grokker.minecraft_opts.include?("--username TestUser")
+    assert_equal ["--gameDir $APP_SUPPORT", "--assetsDir $APP_SUPPORT/assets", "--assetIndex 1.13", "--userType mojang", "--versionType release"], @grokker.minecraft_opts
+    assert_equal 12, @grokker.java_opts.length
+  end
 end
