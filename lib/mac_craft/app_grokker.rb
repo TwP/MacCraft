@@ -22,12 +22,16 @@ module MacCraft
       :jars,
       :version,
       :minor_version,
-      :launcher_version
+      :launcher_version,
+      :java_opts,
+      :minecraft_opts
 
     # Standard initializer that expands out the full application support path
     # for the Minecraft application.
     def initialize(app_support: File.expand_path("~/Library/Application Support/minecraft"))
       @app_support = app_support.freeze
+      @java_opts = []
+      @minecraft_opts = []
     end
 
     # Do the actual command line retrieval and parsing. The ned result is that
@@ -121,6 +125,13 @@ module MacCraft
 
       when %r/^-Dminecraft\.launcher\.version=(.*)/
         @launcher_version = $1
+
+      # remove user-specific game settings
+      when %r/\A--(?:username|uuid|accessToken)\s+/
+        nil
+
+      when %r/\A--[[:alpha:]]+\s+/
+        @minecraft_opts << flag
       end
     end
   end
