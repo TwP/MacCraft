@@ -78,6 +78,7 @@ module MacCraft
       # see https://github.com/sveinbjornt/Platypus/issues/78
       # this is our workaround for the time being
       FileUtils.cp_r(natives, "#{username} Minecraft.app/Contents/Resources/")
+      FileUtils.mkdir("#{username} Minecraft.app/Contents/Resources/logs")
 
       FileUtils.mv("#{username} Minecraft.app", MacCraft.path("pkg"))
       puts "\nYour client is ready: `pkg/#{username} Minecraft.app`"

@@ -125,13 +125,13 @@ module MacCraft
       when %r/\A(--[[:alpha:]]+)\s+(.*)/
         option = $1
         value = $2.sub(app_support, "$APP_SUPPORT")
-        @minecraft_opts << "#{option} #{value}"
+        @minecraft_opts << "#{option} \"#{value}\""
 
       when %r/\A(-[A-Za-z][^=\s]+)(?:=(.*))?/
         option = $1
         if $2
           value = $2 ? $2.sub(app_support, "$APP_SUPPORT") : nil
-          option = "#{option}=#{value}"
+          option = "#{option}=\"#{value}\""
         end
         @java_opts << option
       end

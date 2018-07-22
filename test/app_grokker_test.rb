@@ -23,7 +23,7 @@ class AppGrokkerTest < Test::Unit::TestCase
     assert_equal "1.12.2", @grokker.version
 
     refute @grokker.minecraft_opts.include?("--username TestUser")
-    assert_equal ["--gameDir $APP_SUPPORT", "--assetsDir $APP_SUPPORT/assets", "--assetIndex 1.12", "--userType mojang", "--versionType release"], @grokker.minecraft_opts
+    assert_equal ["--gameDir \"$APP_SUPPORT\"", "--assetsDir \"$APP_SUPPORT/assets\"", "--assetIndex \"1.12\"", "--userType \"mojang\"", "--versionType \"release\""], @grokker.minecraft_opts
     assert_equal 13, @grokker.java_opts.length
   end
 
@@ -38,7 +38,7 @@ class AppGrokkerTest < Test::Unit::TestCase
     assert_equal "1.13", @grokker.version
 
     refute @grokker.minecraft_opts.include?("--username TestUser")
-    assert_equal ["--gameDir $APP_SUPPORT", "--assetsDir $APP_SUPPORT/assets", "--assetIndex 1.13", "--userType mojang", "--versionType release"], @grokker.minecraft_opts
+    assert_equal ["--gameDir \"$APP_SUPPORT\"", "--assetsDir \"$APP_SUPPORT/assets\"", "--assetIndex \"1.13\"", "--userType \"mojang\"", "--versionType \"release\""], @grokker.minecraft_opts
     assert_equal 12, @grokker.java_opts.length
   end
 end
