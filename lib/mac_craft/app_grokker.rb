@@ -26,8 +26,8 @@ module MacCraft
 
     # Standard initializer that expands out the full application support path
     # for the Minecraft application.
-    def initialize
-      @app_support = File.expand_path("~/Library/Application Support/minecraft").freeze
+    def initialize(app_support: File.expand_path("~/Library/Application Support/minecraft"))
+      @app_support = app_support.freeze
     end
 
     # Do the actual command line retrieval and parsing. The ned result is that
@@ -119,7 +119,7 @@ module MacCraft
       when %r/^--assetIndex\s+(.*)/
         @minor_version = $1
 
-      when %r/-Dminecraft\.launcher\.version=(.*)/
+      when %r/^-Dminecraft\.launcher\.version=(.*)/
         @launcher_version = $1
       end
     end
