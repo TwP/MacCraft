@@ -78,6 +78,7 @@ module MacCraft
 end
 
 require_relative 'mac_craft/version'
+require_relative 'mac_craft/mc_versions'
 require_relative 'mac_craft/player'
 require_relative 'mac_craft/players'
 require_relative 'mac_craft/app_grokker'

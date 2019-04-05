@@ -121,8 +121,9 @@ module MacCraft
     end
 
     def download_server_jar
-      jar  = "minecraft_server.#{version}.jar"
-      url  = "https://s3.amazonaws.com/Minecraft.Download/versions/#{version}/#{jar}"
+      info = MCVersions.lookup(version: version)
+      jar  = info.jar
+      url  = info.url
       dest = MacCraft.tmp(jar)
 
       if File.exists? dest
