@@ -20,7 +20,7 @@ CLASSPATH="$CLASSPATH:<%= jar %>"
 /usr/bin/find logs -mtime +30 -exec rm {} \;
 
 # start the Minecraft client
-exec $JAVA_HOME/bin/java \
+exec "$JAVA_HOME/bin/java" \
 <% java_opts.each do |opt| %>
   <%= opt %> \
 <% end %>

@@ -89,7 +89,8 @@ module MacCraft
     def parse(cmd: nil)
       # figuring which Java version is being used so we can use it too
       cmd.slice! %r/(^.*)\/bin\/java\s+/
-      @java_home = $1.sub(MINECRAFT_APP, "$APP")
+      @java_home = $1.sub(MINECRAFT_APP, "$APP").
+                      sub(Dir.home, "$HOME")
 
       # remvoe the main Java class from the command line so we can get at all the flags
       cmd   = cmd.sub(%r/\s+#{Regexp.escape(JAVA_MAIN)}\s+/, " ")
