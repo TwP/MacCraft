@@ -12,7 +12,7 @@ SERVER_IP=`/sbin/ifconfig | /usr/bin/grep -v '127.0.0.1' | /usr/bin/awk '/inet /
 
 # start the Minecraft server
 exec $JAVA_HOME/bin/java \
-  -Xms1G -Xmx1G -Xmn128M \
+  -Xms1024M -Xmx1024M -Xmn128M \
   -XX:+UseConcMarkSweepGC \
   -XX:+UseParNewGC \
   -XX:+CMSIncrementalMode \
