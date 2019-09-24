@@ -11,11 +11,13 @@ SERVER_IP=`/sbin/ifconfig | /usr/bin/grep -v '127.0.0.1' | /usr/bin/awk '/inet /
 /usr/bin/find logs -mtime +30 -exec rm {} \;
 
 # start the Minecraft server
-exec $JAVA_HOME/bin/java \
-  -Xms1024M -Xmx1024M -Xmn128M \
-  -XX:+UseConcMarkSweepGC \
-  -XX:+UseParNewGC \
-  -XX:+CMSIncrementalMode \
-  -XX:-UseAdaptiveSizePolicy \
+exec "$JAVA_HOME/bin/java" \
+  -Xms1024M -Xmx1024M -Xss1M \
+  -XX:+UnlockExperimentalVMOptions \
+  -XX:+UseG1GC \
+  -XX:G1NewSizePercent="20" \
+  -XX:G1ReservePercent="20" \
+  -XX:MaxGCPauseMillis="50" \
+  -XX:G1HeapRegionSize="32M" \
   -jar minecraft_server.${VERSION}.jar
 
