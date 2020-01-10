@@ -44,7 +44,7 @@ module MacCraft
 
     # Returns the `div` that contains the list of stable releases.
     def stable
-      page.css("#content div.container div.row:nth-child(2) div:first-child")
+      page.css("#content div.container div.row > div > ul.list-group")
     end
 
     # Returns a Nokogiri document containing the HTML of the `mcversions.net`
