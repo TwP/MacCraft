@@ -14,7 +14,7 @@ module MacCraft
     # information will be returned.
     def lookup(version: "latest")
       if "latest" == version
-        version = versions.first
+       version = versions.first
       end
 
       stable_versions[version]
@@ -30,21 +30,21 @@ module MacCraft
       return @stable_versions if defined? @stable_versions
       @stable_versions = Hash.new
 
-      stable.css("li.release").each do |node|
-        version = node.attribute("id").value
-        server = node.css("a.server")
-        unless server.empty?
-          url = server.attribute("href").value
-          @stable_versions[version] = VersionInfo.new(version: version, url: url)
-        end
+      stable.each do |node|
+        version = node.xpath("div[1]/p/text()").text
+        next unless version =~ %r/\d+\.\d+(\.\d+)?/
+
+        details = node.xpath("div[2]/a/@href").first.value
+        details = URL + details
+        @stable_versions[version] = VersionInfo.new(version: version, details: details)
       end
 
       @stable_versions
     end
 
-    # Returns the `div` that contains the list of stable releases.
+    # Returns the list of `div` for the stable releases.
     def stable
-      page.css("#content div.container div.row > div > ul.list-group")
+      page.xpath("/html/body/main/div/div[2]/div[1]/div/div")
     end
 
     # Returns a Nokogiri document containing the HTML of the `mcversions.net`
@@ -56,12 +56,21 @@ module MacCraft
     end
 
     class VersionInfo
-      attr_reader :version, :url, :jar
+      attr_reader :version, :details, :jar
 
-      def initialize(version:, url:)
+      def initialize(version:, details:)
         @version = version
-        @url = url
+        @details = details
         @jar = "minecraft_server.#{version}.jar"
+        @url = nil
+      end
+
+      def url
+        return @url unless @url.nil?
+
+        content = Net::HTTP.get(URI(details))
+        page = Nokogiri::HTML(content)
+        @url = page.xpath("//a[@download=\"minecraft_server-#{version}.jar\"]/@href").first&.value
       end
     end
   end
