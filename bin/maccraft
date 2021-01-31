@@ -54,7 +54,7 @@ if username = options[:username]
 
 elsif options[:version]
   options[:servername] = args.first unless args.empty?
-  MacCraft::ServerGenerator.new(options).generate
+  MacCraft::ServerGenerator.new(**options).generate
 
 elsif app_path = options[:upgrade]
   MacCraft::UpgradeApps.new(path: app_path).upgrade
