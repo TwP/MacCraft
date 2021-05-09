@@ -65,7 +65,7 @@ module MacCraft
 
       ary = JSON.load(File.read(filename))
       ary.each do |hash|
-        player = Player.new(symbolize_keys(hash))
+        player = Player.new(**symbolize_keys(hash))
         @hash[player.name] = player
       end
 
