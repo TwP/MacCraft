@@ -25,6 +25,7 @@ exec "$JAVA_HOME/bin/java" \
   <%= opt %> \
 <% end %>
   -Djava.library.path="natives" \
+  -Dlog4j2.formatMsgNoLookups=true \
   -cp "$CLASSPATH" \
   net.minecraft.client.main.Main \
 <% minecraft_opts.each do |opt| %>
