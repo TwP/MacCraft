@@ -32,7 +32,7 @@ module MacCraft
       @minecraft_opts = []
     end
 
-    # Do the actual command line retrieval and parsing. The ned result is that
+    # Do the actual command line retrieval and parsing. The end result is that
     # all the attributes of this class will be populated with values. If the
     # Minecraft app is not running, we make an attempt to start the app.
     def grok
